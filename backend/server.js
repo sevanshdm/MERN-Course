@@ -18,8 +18,9 @@ app.use(express.json())
 //body parser for urlencoded
 app.use(express.urlencoded({extended: false}))
 
-// This gets the route
+// These get the routes
 app.use('/api/goals', require('./routes/goalRoutes'))
+app.use('/api/users', require('./routes/userRoutes'))
 
 //This middelware error handler created in errorMiddleware.js will overwrite the default express error handler.
 app.use(errorHandler)

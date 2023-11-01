@@ -2,8 +2,11 @@ const express = require('express')
 const router = express.Router() // Router objects handle requests.
 const {getGoals, setGoal, updateGoal, deleteGoal} = require ('../controllers/goalController')
 
-router.route('/').get(getGoals).post(setGoal)
-router.route('/:id').put(updateGoal).delete(deleteGoal)
+const {protect} = require('../middleware/authMiddleware')
+
+            // you can put in middleware(protect) here, this one protects the route
+router.route('/').get(protect, getGoals).post(protect, setGoal)
+router.route('/:id').put(protect, updateGoal).delete(protect, deleteGoal)
 
 //this is what the routes looked like before lines 5-6 of code above
 
