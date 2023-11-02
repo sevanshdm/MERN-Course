@@ -1,5 +1,11 @@
 import {useState, useEffect} from 'react'
+//useSelector selects something from the state, dispatch, dispatches functions like register(), the async thunk funct. or reset()
+import {useSelector, useDispatch} from 'react-redux' 
+import {useNavigate} from 'react-router-dom'
+import {toast} from 'react-toastify'
 import { FaUser } from 'react-icons/fa'
+import {register, reset} from '../features/auth/authSlice'
+import Spinner from '../components/Spinner'
 
 function Register() {
     const[formData, setFormData] = useState({
@@ -10,6 +16,24 @@ function Register() {
     })
 
     const {name, email, password, password2} = formData
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    //Select what you want from your state
+    const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+
+    useEffect(() => {
+        if(isError) {
+            toast.error(message)
+        }
+        if(isSuccess || user) { //user checks if user is already logged in, like looking for tokens etc...
+            navigate('/') //navigate to dashboard
+        }
+
+        dispatch(reset()) //reset is from authSlice.js line 38
+
+    }, [user, isError, isSuccess, message, navigate, dispatch]) //If anything in this dependency array changes, it will fire off useEffect()
 
     // this allows you to type in the input boxes.
     const onChange = (e) => {
@@ -22,6 +46,22 @@ function Register() {
 
     const onSubmit = (e) => {
         e.preventDefault()
+
+        if(password !== password2){
+            toast.error('Passwords do not match')
+        } else {
+            const userData = { // this all comes from the form
+                name, 
+                email, 
+                password,
+            }
+
+            dispatch(register(userData)) // dispatching register() from authSlice.js line 19. Then passing in user from same file. same line
+        }
+    }
+
+    if(isLoading){
+        return <Spinner/>
     }
 
     return (
@@ -41,8 +81,8 @@ function Register() {
                             className='form-control' 
                             id='name' 
                             name='name'
-                            value={password} 
-                            placeholder='Enter your password' 
+                            value={name} 
+                            placeholder='Enter your name' 
                             onChange={onChange}
                         />
                     </div>
