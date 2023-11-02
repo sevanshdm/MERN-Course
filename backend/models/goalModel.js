@@ -4,7 +4,7 @@ const goalSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId, //This id comes from when a new resource is created mongoose auto creates ids on creation.
         required: true,
-        ref: 'User' // tells which model an object ID belongs to, which is the user in this case.
+        ref: 'User', // tells which model an object ID belongs to, which is the user in this case.
     },
     text: {
         type: String,    //triggered if first param isn't fulfilled.
